@@ -1,7 +1,7 @@
-   <template>
+<template>
     <div class="container">
-      <h2 class="text-light mb-4">Upload Movie</h2>
-      <form @submit.prevent="saveMovie">
+      <h2 class="text-light mb-4">Edit Movie</h2>
+      <!-- <form @submit.prevent="updateMovie"> -->
         <div class="row">
           <div class="col-8">
             <div class="mb-3">
@@ -47,7 +47,7 @@
               <p class="text-light">Directors</p>
               <div class="row hide-scrollbar p-3" style="max-height: 150px; overflow-y: scroll;">
                 <div class="border rounded-3 col-5 p-3 mx-2 text-center" v-for="(director, index) in directors" :key="index">
-                  <input type="checkbox" :id="'director_' + index" v-model="model.movie.directors[index]" :value="director.id" />
+                  <input type="checkbox" :id="'director_' + index" v-model="model.movie.directors[index]" :value="director.id"  />
                   <label :for="'director_' + index" class="text-light mx-3">{{ director.directorName }}</label>
                   <img style="border-radius: 50%; object-fit: cover; overflow: hidden; height: 80px; width: 80px;" :src="this.baseUrl + director.directorImage" />
                 </div>
@@ -99,24 +99,24 @@
             </div>
           </div>
         </div>
-        <input type="submit" class="btn btn-danger my-2 col-2" value="Upload" name="submit_btn">
-      </form>
+        <button type="button" @click="updateMovie" class="btn btn-danger my-2 col-2" name="submit_btn">Update</button>
+      <!-- </form> -->
     </div>
   </template>
   <script>
   import axios from 'axios';
   
   export default {
-    name: 'MovieCreate',
+    name: 'MovieEdit',
     data() {
       return {
         model: {
           movie: {
+            id: '',
             movieName: '',
             length: '',
             ageRestricted: '',
             language: '',
-            rating: '5',
             genres: [],
             casts: [],
             directors: [],
@@ -145,56 +145,114 @@
         baseUrl: 'https://localhost:7071'
       };
     },
+    mounted() {
+      this.movieId = this.$route.params.id;
+      this.getMovie(this.$route.params.id); 
+      this.fetchGenres();
+      this.fetchCasts();
+      this.fetchDirectors();
+    },
     methods: {
-      saveMovie() {
-        const formData = new FormData();
-        for (let key in this.model.movie) {
-          if (Array.isArray(this.model.movie[key])) {
-            this.model.movie[key].forEach((value, index) => {
-              formData.append(`${key}[${index}]`, value);
+        getMovie(movieId){
+            axios.get('https://localhost:7071/api/Movies/get-movies-with-fk?id=' + movieId).then(response => {
+                console.log(response.data);
+                this.model.movie = response.data;
+                // this.model.movie.genres.forEach((genre, index) => {
+                //     this.model.movie.genres[index] = true;
+                // });
+                // this.model.movie.casts.forEach((cast, index) => {
+                //     this.model.movie.casts[index] = true;
+                // });
+                // this.model.movie.directors.forEach((director, index) => {
+                //     this.model.movie.directors[index] = true;
+                // });
+                this.model.movie.movieGenres.forEach(movieGenre => {
+                    const index = this.genres.findIndex(genre => genre.id === movieGenre.genreId);
+                    if (index !== -1) {
+                    this.model.movie.genres[index] = true;
+                    }
+                });
+                this.model.movie.movieCasts.forEach(movieCast => {
+                    const index = this.casts.findIndex(cast => cast.id === movieCast.castId);
+                    if (index !== -1) {
+                    this.model.movie.casts[index] = true;
+                    }
+                });
+                this.model.movie.movieDirectors.forEach(movieDirector => {
+                    const index = this.directors.findIndex(director => director.id === movieDirector.directorId);
+                    if (index !== -1) {
+                    this.model.movie.directors[index] = true;
+                    }
+                });
+                this.model.movie.releaseDate = this.formatDate(this.model.movie.releaseDate);
+                this.model.movie.endDate = this.formatDate(this.model.movie.endDate);
+                this.previewImage.logo = this.baseUrl + this.model.movie.logo;
+                this.previewImage.poster = this.baseUrl + this.model.movie.poster;
+                this.previewImage.thumbnail = this.baseUrl + this.model.movie.thumbnail;
+                this.previewImage.trailer = this.baseUrl + this.model.movie.trailer;
+            }).catch(error => {
+                console.error('Error fetching movie:', error);
             });
-          } else {
-            formData.append(key, this.model.movie[key]);
-          }
-        }
-        let genreIndex = 0;
-        let castIndex = 0;
-        let directorIndex = 0;
-        this.model.movie.genres.forEach((isChecked, index) => {
-          if (isChecked) {
-            formData.append(`MovieGenres[${genreIndex}].GenreId`, this.genres[index].id);
-            genreIndex++;
-          }
-        });
+        },
+        formatDate(date) {
+            // Kiểm tra xem date có tồn tại không để tránh lỗi
+            if (date) {
+                const parts = date.split("/");
+                return `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+            } else {
+                return ''; // Trả về chuỗi rỗng nếu không có date
+            }
+        },
+        updateMovie() {
+            console.log('here');
+            const formData = new FormData();
+            for (let key in this.model.movie) {
+            if (Array.isArray(this.model.movie[key])) {
+                this.model.movie[key].forEach((value, index) => {
+                formData.append(`${key}[${index}]`, value);
+                });
+            } else {
+                formData.append(key, this.model.movie[key]);
+            }
+            }
+            let genreIndex = 0;
+            let castIndex = 0;
+            let directorIndex = 0;
+            this.model.movie.genres.forEach((isChecked, index) => {
+            if (isChecked) {
+                formData.append(`MovieGenres[${genreIndex}].GenreId`, this.genres[index].id);
+                genreIndex++;
+            }
+            });
 
-        this.model.movie.casts.forEach((isChecked, index) => {
-          if (isChecked) {
-            formData.append(`MovieCasts[${castIndex}].CastId`, this.casts[index].id);
-            castIndex++;
-          }
-        });
+            this.model.movie.casts.forEach((isChecked, index) => {
+            if (isChecked) {
+                formData.append(`MovieCasts[${castIndex}].CastId`, this.casts[index].id);
+                castIndex++;
+            }
+            });
+            
+            this.model.movie.directors.forEach((isChecked, index) => {
+            if (isChecked) {
+                formData.append(`MovieDirectors[${directorIndex}].DirectorId`, this.directors[index].id);
+                directorIndex++;
+            }
+            });
+            console.log(formData);
+            console.log(this.model.movie);
         
-        this.model.movie.directors.forEach((isChecked, index) => {
-          if (isChecked) {
-            formData.append(`MovieDirectors[${directorIndex}].DirectorId`, this.directors[index].id);
-            directorIndex++;
-          }
-        });
-        console.log(formData);
-        console.log(this.model.movie);
-       
-        axios.post('https://localhost:7071/api/Movies', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }).then(response => {
-          console.log(response.data);
-          this.$router.push('/movie');
-          alert('Movie added successfully');
-          // Redirect or any other action after successful upload
-        }).catch(error => {
-          console.error('Error adding movie:', error);
-        });
+            axios.put(`https://localhost:7071/api/Movies/${this.movieId}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+            }).then(response => {
+            console.log(response.data);
+            this.$router.push('/movie');
+            alert('Movie updated successfully');
+            // Redirect or any other action after successful upload
+            }).catch(error => {
+            console.error('Error adding movie:', error);
+            });
       },
       showImage(event, type) {
         const file = event.target.files[0];
@@ -244,10 +302,5 @@
           });
       }
     },
-    mounted() {
-      this.fetchGenres();
-      this.fetchCasts();
-      this.fetchDirectors();
-    }
   };
   </script>

@@ -72,9 +72,9 @@ library.add(fas)
                   {{movie.length}} minutes
                 </td>
                 <td class="col-2">
-                  <a  type="button" class="btn btn-outline-light my-1" tabindex="-1" role="button" aria-disabled="true">
+                  <RouterLink :to="'/movie/edit/' + movie.id"  type="button" class="btn btn-outline-light my-1" tabindex="-1" role="button" aria-disabled="true">
                     <font-awesome-icon :icon="['fas', 'pen-to-square']" />
-                  </a>
+                  </RouterLink>
                   <button type = "button" class="btn btn-outline-danger my-1 mx-1">
                     <FontAwesomeIcon :icon="['fas', 'trash']" />
                   </button>

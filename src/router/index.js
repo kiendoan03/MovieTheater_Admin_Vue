@@ -12,6 +12,7 @@ import ActorCreate from '../views/Actor/ActorCreate.vue'
 import ActorEdit from '../views/Actor/ActorEdit.vue'
 import CustomerDetail from '../views/Customer/CustomerDetail.vue'
 import MovieCreate from '@/views/Movie/MovieCreate.vue'
+import MovieEdit from '@/views/Movie/MovieEdit.vue'
 import DirectorCreate from '@/views/Director/DirectorCreate.vue'
 import DirectorEdit from '@/views/Director/DirectorEdit.vue'
 import GenreCreate from '@/views/Genre/GenreCreate.vue'
@@ -105,6 +106,11 @@ const router = createRouter({
             path: '/movie/create',
             name: 'movieCreate',
             component: MovieCreate
+        },
+        {
+            path: '/movie/edit/:id',
+            name: 'movieEdit',
+            component: MovieEdit
         },
         {
             path: '/room',
