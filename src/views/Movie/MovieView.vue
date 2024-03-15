@@ -1,4 +1,5 @@
 <script setup lang = "ts">
+
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -55,11 +56,17 @@ library.add(fas)
             <td class="col-1">
               {{ movie.endDate }}
             </td>
-            <td class="col-1">
+            <td v-if="formatDate(movie.releaseDate) <= today && today <= formatDate(movie.endDate)" class="col-1">
               Showing
             </td>
+            <td v-else-if="formatDate(movie.releaseDate) > today" class="col-1">
+              Upcoming
+            </td>
+            <td v-else-if="formatDate(movie.endDate) > today" class="col-1">
+              End
+            </td>
               <td class="col-1">
-                English - VietSub
+                {{movie.language}}
               </td>
                 <td class="col-1">
                   {{movie.length}} minutes
@@ -80,18 +87,24 @@ library.add(fas)
 </main>
 </template>
 <script lang="ts">
+
   export default {
     name: 'MovieView',
     data() {
       return {
         movies: [],
-        baseUrl: 'https://localhost:7071'
+        baseUrl: 'https://localhost:7071',
+        today: new Date().toISOString().split('T')[0],
       }
     },
     mounted() {
       this.getMovies();
     },
     methods:{
+      formatDate(dateString) {
+    const [day, month, year] = dateString.split('/');
+    return `${year}-${month}-${day}`;
+    },
       getMovies(){
         axios.get('https://localhost:7071/api/Movies').then(response => {
             this.movies = response.data.map(movie => ({
