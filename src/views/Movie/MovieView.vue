@@ -75,7 +75,7 @@ library.add(fas)
                   <RouterLink :to="'/movie/edit/' + movie.id"  type="button" class="btn btn-outline-light my-1" tabindex="-1" role="button" aria-disabled="true">
                     <font-awesome-icon :icon="['fas', 'pen-to-square']" />
                   </RouterLink>
-                  <button type = "button" class="btn btn-outline-danger my-1 mx-1">
+                  <button @click="deleteMovie(movie.id)" type = "button" class="btn btn-outline-danger my-1 mx-1">
                     <FontAwesomeIcon :icon="['fas', 'trash']" />
                   </button>
                 </td>
@@ -122,7 +122,7 @@ library.add(fas)
             console.error('Error fetching movies:', error);
         });
       },
-      deleteCast(movieId){
+      deleteMovie(movieId){
         axios.delete(`https://localhost:7071/api/Movies/${movieId}`).then(response => {
             console.log(response.data);
             alert('Movie deleted successfully');

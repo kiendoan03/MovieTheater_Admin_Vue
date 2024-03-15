@@ -6,7 +6,7 @@ import { RouterLink, RouterView } from 'vue-router'
 <template> 
 
   <header>
-    <nav class="navbar navbar-expand-lg mt-0 fixed-top" style="background-color: transparent;">
+    <div class="navbar navbar-expand-lg mt-0 fixed-top" style="background-color: transparent;">
                 <div class="container mx-auto p-0">
                     <RouterLink class="navbar-brand" to="/">
                         <img src="..\src\assets\image\NetFnix Full logo.png" alt="" height="50" class="d-inline-block align-text-top">
@@ -19,7 +19,7 @@ import { RouterLink, RouterView } from 'vue-router'
                         </ul>
                     </div>
                 </div>
-      </nav>
+    </div>
     <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
 
     <div class="wrapper" >
