@@ -51,9 +51,11 @@ library.add(fas)
               <img class="col-12 rounded-3 w-75" :src="movie.poster">
             </td>
             <td class="col-1">
+              {{ formatDate(movie.releaseDate) }}
               {{ movie.releaseDate }}
             </td>
             <td class="col-1">
+              {{ formatDate(movie.endDate) }}
               {{ movie.endDate }}
             </td>
             <td v-if="formatDate(movie.releaseDate) <= today && today <= formatDate(movie.endDate)" class="col-1">
@@ -62,7 +64,7 @@ library.add(fas)
             <td v-else-if="formatDate(movie.releaseDate) > today" class="col-1">
               Upcoming
             </td>
-            <td v-else-if="formatDate(movie.endDate) > today" class="col-1">
+            <td v-else-if="formatDate(movie.endDate) < today" class="col-1">
               End
             </td>
               <td class="col-1">
@@ -102,9 +104,9 @@ library.add(fas)
     },
     methods:{
       formatDate(dateString) {
-    const [day, month, year] = dateString.split('/');
-    return `${year}-${month}-${day}`;
-    },
+      const [day, month, year] = dateString.split('/');
+      return `${year}-${month}-${day}`;
+      },
       getMovies(){
         axios.get('https://localhost:7071/api/Movies').then(response => {
             this.movies = response.data.map(movie => ({
@@ -118,6 +120,7 @@ library.add(fas)
               language: movie.language,
               length: movie.length
             }));
+            console.log(this.today);
         }).catch(error => {
             console.error('Error fetching movies:', error);
         });

@@ -194,14 +194,18 @@
                 console.error('Error fetching movie:', error);
             });
         },
-        formatDate(date) {
-            // Kiểm tra xem date có tồn tại không để tránh lỗi
-            if (date) {
-                const parts = date.split("/");
-                return `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-            } else {
-                return ''; // Trả về chuỗi rỗng nếu không có date
-            }
+        // formatDate(date) {
+        //     // Kiểm tra xem date có tồn tại không để tránh lỗi
+        //     if (date) {
+        //         const parts = date.split("/");
+        //         return `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+        //     } else {
+        //         return ''; // Trả về chuỗi rỗng nếu không có date
+        //     }
+        // },
+        formatDate(dateString) {
+        const [day, month, year] = dateString.split('/');
+        return `${year}-${month}-${day}`;
         },
         updateMovie() {
             console.log('here');
