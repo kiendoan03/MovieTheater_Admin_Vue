@@ -160,24 +160,31 @@
             formData.append(key, this.model.movie[key]);
           }
         }
-
+        let genreIndex = 0;
+        let castIndex = 0;
+        let directorIndex = 0;
         this.model.movie.genres.forEach((isChecked, index) => {
           if (isChecked) {
-            formData.append(`MovieGenres[${index}].GenreId`, this.genres[index].id);
+            formData.append(`MovieGenres[${genreIndex}].GenreId`, this.genres[index].id);
+            genreIndex++;
           }
         });
 
         this.model.movie.casts.forEach((isChecked, index) => {
           if (isChecked) {
-            formData.append(`MovieCasts[${index}].CastId`, this.casts[index].id);
+            formData.append(`MovieCasts[${castIndex}].CastId`, this.casts[index].id);
+            castIndex++;
           }
         });
         
         this.model.movie.directors.forEach((isChecked, index) => {
           if (isChecked) {
-            formData.append(`MovieDirectors[${index}].DirectorId`, this.directors[index].id);
+            formData.append(`MovieDirectors[${directorIndex}].DirectorId`, this.directors[index].id);
+            directorIndex++;
           }
         });
+        console.log(formData);
+        console.log(this.model.movie);
        
         axios.post('https://localhost:7071/api/Movies', formData, {
           headers: {

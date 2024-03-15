@@ -8,9 +8,9 @@ import { RouterLink, RouterView } from 'vue-router'
   <header>
     <nav class="navbar navbar-expand-lg mt-0 fixed-top" style="background-color: transparent;">
                 <div class="container mx-auto p-0">
-                    <a class="navbar-brand" href="#">
+                    <RouterLink class="navbar-brand" to="/">
                         <img src="..\src\assets\image\NetFnix Full logo.png" alt="" height="50" class="d-inline-block align-text-top">
-                    </a>
+                    </RouterLink>
                     <div class="dropdown">
                         <img class="col-12 border " style="border-radius: 50%;object-fit: cover; overflow: hidden;height: 3vmax; width: 3vmax;" src="../src/assets/image/Netflix-avt.png" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
                             height="" alt="">
