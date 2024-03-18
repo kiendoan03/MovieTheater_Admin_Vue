@@ -10,7 +10,14 @@ library.add(fas)
 </script>
 
 <template>
-  <main>
+  <div v-if="!auth">
+    <h1>Movies management page</h1>
+    <h2 class="text-danger text-center my-5">
+      <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+      You are not authorized to access this page
+    </h2>
+  </div>
+  <main v-if="auth">
     <div class="row">
       <div class="col">
            <h2 class="text-light">Movies management site</h2>
@@ -95,12 +102,19 @@ library.add(fas)
         movies: [],
         baseUrl: 'https://localhost:7071',
         today: new Date().toISOString().split('T')[0],
+        auth: false,
       }
     },
     mounted() {
       this.getMovies();
+      this.isAuth();
     },
     methods:{
+      isAuth(){
+        if(localStorage.getItem('token') && localStorage.getItem('role') != 'Customer'){
+          this.auth = true;
+        }
+      },
       formatDate(dateString) {
       const [day, month, year] = dateString.split('/');
       return `${year}-${month}-${day}`;

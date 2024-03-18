@@ -9,7 +9,14 @@ library.add(fas)
 </script>
 
 <template>
-  <div>
+    <div v-if="!auth">
+      <h1 class="text-light">Genre management page</h1>
+      <h2 class="my-5 text-danger text-center">
+        <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+        You are not authorized to access this page
+      </h2>
+    </div>
+  <div v-if="auth">
     <h1>Genre management page</h1>
     <RouterLink to="/genre/create" type="button" class="btn btn-outline-light my-4" tabindex="-1" role="button" aria-disabled="true">
         <font-awesome-icon :icon="['fas', 'fa-plus']"></font-awesome-icon> New genre
@@ -49,12 +56,19 @@ export default {
   data() {
     return {
       genres: [],
+      auth: false,
     }
   },
   mounted() {
     this.getGenres();
+    this.isAuth();
   },
   methods: {
+    isAuth(){
+        if(localStorage.getItem('token') && localStorage.getItem('role') != 'Customer'){
+            this.auth = true;
+        }
+    },
     getGenres() {
       axios.get('https://localhost:7071/api/Genres').then(response => {
         // Xử lý dữ liệu trả về

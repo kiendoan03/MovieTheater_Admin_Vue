@@ -7,6 +7,14 @@ library.add(fas)
 
 </script>
 <template>
+    <div v-if="!auth">
+        <h1>Schedule Detail</h1>
+        <h2 class="my-5 text-danger text-center">
+            <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+            You are not authorized to access this page
+        </h2>
+    </div>
+    <div v-if="auth">
         <h1>{{this.model.room.roomName}}</h1>
         <div v-if ="this.model.room.roomTypeId == 1"  class="row mx-3 my-3">
             <div class="col-12">
@@ -161,6 +169,8 @@ library.add(fas)
                         </div>
                     </div>
         </div>
+    </div>
+        
 </template>
 
 <script lang="ts">
@@ -183,15 +193,23 @@ export default {
                     roomName: '',
                     roomTypeId: ''
                 },
-            },  
+               
+            },
+            auth: false
         }
     },
     mounted() {
         this.scheduleId = this.$route.params.id;
         this.getSchedule(this.$route.params.id);
         this.getTickets(this.$route.params.id);
+        this.isAuth();
     },
     methods: {
+        isAuth() {
+            if (localStorage.getItem('token') != null) {
+                this.auth = true;
+            }
+        },
         getSchedule(scheduleId) {
         axios.get(`https://localhost:7071/api/Schedules/${scheduleId}`).then(response => {
                 console.log(response.data);

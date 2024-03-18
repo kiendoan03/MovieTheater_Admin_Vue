@@ -1,5 +1,20 @@
-   <template>
-    <div class="container">
+<script setup lang = "ts">
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(fas)
+
+</script>
+  <template>
+     <div v-if="!manager">
+        <h1>Upload Movie</h1>
+        <h2 class="text-center my-5 text-danger">
+            <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+            You are not authorized to access this page
+        </h2>
+    </div>
+    <div v-if="manager" class="container">
       <h2 class="text-light mb-4">Upload Movie</h2>
       <form @submit.prevent="saveMovie">
         <div class="row">
@@ -103,7 +118,7 @@
       </form>
     </div>
   </template>
-  <script>
+  <script lang="ts">
   import axios from 'axios';
   
   export default {
@@ -142,10 +157,16 @@
         genres: [],
         casts: [],
         directors: [],
-        baseUrl: 'https://localhost:7071'
+        baseUrl: 'https://localhost:7071',
+        manager: false
       };
     },
     methods: {
+      isManager(){
+        if(localStorage.getItem('role') == 'Manager'){
+          this.manager = true;
+        }
+      },
       saveMovie() {
         const formData = new FormData();
         for (let key in this.model.movie) {
@@ -248,6 +269,7 @@
       this.fetchGenres();
       this.fetchCasts();
       this.fetchDirectors();
+      this.isManager();
     }
   };
   </script>

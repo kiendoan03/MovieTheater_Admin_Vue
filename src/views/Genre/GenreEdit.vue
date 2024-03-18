@@ -1,5 +1,20 @@
+<script setup lang = "ts">
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(fas)
+
+</script>
 <template>
-    <div>
+    <div v-if="!manager">
+        <h1>Edit Genre</h1>
+        <h2 class="text-center my-5 text-danger">
+            <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+            You are not authorized to access this page
+        </h2>
+    </div>
+    <div v-if="manager">
         <h1>Edit Genre</h1>
         <div class="row">
             <div class="col-8">
@@ -25,13 +40,20 @@ export default {
                     genreName: '',
                 }
             },  
+            manager: false,
         }
     },
     mounted() {
         this.genreId = this.$route.params.id;
         this.getGenre(this.$route.params.id);
+        this.isManager();
     },
     methods: {
+        isManager(){
+            if(localStorage.getItem('role') == 'Manager'){
+                this.manager = true;
+            }
+        },
        getGenre(genreId) {
         axios.get(`https://localhost:7071/api/Genres/${genreId}`).then(response => {
             console.log(response.data);

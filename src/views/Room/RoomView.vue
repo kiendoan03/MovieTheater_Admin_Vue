@@ -9,7 +9,14 @@ library.add(fas)
 </script>
 
 <template>
-  <div>
+  <div v-if="!auth">
+    <h1>Room management page</h1>
+    <h2 class="text-center text-danger my-5">
+      <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+      You are not authorized to access this page
+    </h2>
+  </div>
+  <div v-if="auth">
     <h1>Room management page</h1>
     <RouterLink to="/room/create" type="button" class="btn btn-outline-light my-4" tabindex="-1" role="button" aria-disabled="true">
         <font-awesome-icon :icon="['fas', 'fa-plus']"></font-awesome-icon> New Room
@@ -55,12 +62,19 @@ export default {
   data() {
     return {
       rooms: [],
+      auth: false,
     }
   },
   mounted() {
     this.getRooms();
+    this.isAuth();
   },
   methods: {
+    isAuth(){
+      if(localStorage.getItem('token') && localStorage.getItem('role') != 'Customer'){
+        this.auth = true;
+      }
+    },
     getRooms() {
       axios.get('https://localhost:7071/api/Rooms').then(response => {
         this.rooms = response.data;

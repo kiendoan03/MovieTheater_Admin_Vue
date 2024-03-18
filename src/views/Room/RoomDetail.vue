@@ -7,6 +7,14 @@ library.add(fas)
 
 </script>
 <template>
+    <div v-if="!manager">
+        <h1>Room Detail</h1>
+        <h2 class="text-center text-danger my-5">
+            <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+            You are not authorized to access this page
+        </h2>
+    </div>
+    <div v-if="manager">
         <h1>{{this.model.room.roomName}}</h1>
         <div v-if ="this.model.room.roomTypeId == 1"  class="row mx-3 my-3">
             <div class="col-12">
@@ -153,6 +161,8 @@ library.add(fas)
                         </div>
                     </div>
         </div>
+    </div>
+        
 </template>
 
 <script lang="ts">
@@ -169,14 +179,21 @@ export default {
                 },
                 seats: []
             },  
+            manager: false,
         }
     },
     mounted() {
         this.roomId = this.$route.params.id;
         this.getRoom(this.$route.params.id);
         this.getSeats(this.$route.params.id);
+        this.isManager();
     },
     methods: {
+        isManager(){
+            if(localStorage.getItem('role') == 'Manager'){
+                this.manager = true;
+            }
+        },
         getRoom(roomId) {
         axios.get(`https://localhost:7071/api/Rooms/${roomId}`).then(response => {
                 console.log(response.data);

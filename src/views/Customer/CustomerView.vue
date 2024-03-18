@@ -13,6 +13,7 @@ library.add(fas)
     <div v-if="!auth">
       <h1 class="text-light">Customer management page</h1>
       <h2 class="my-5 text-danger text-center">
+        <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
         You are not authorized to access this page
       </h2>
     </div>
@@ -26,7 +27,7 @@ library.add(fas)
                       <th scope="col">Full name</th>
                       <th scope="col">Email</th>
                       <th scope="col">Image</th>
-                      <th scope="col">Action</th>
+                      <th scope="col" >Action</th>
                   </tr>
               </thead>
               <tbody class="table-group-divider">
@@ -37,8 +38,8 @@ library.add(fas)
                       <td class="col-3">
                           <img class="col-4" :src="customer.image" />
                       </td>
-                      <td class="col-2">
-                          <RouterLink v-if="manager" :to="'/customer/detail/' + customer.id" type="button" class="btn btn-outline-light my-1" tabindex="-1" role="button" aria-disabled="true">
+                      <td class="col-2" >
+                          <RouterLink :to="'/customer/detail/' + customer.id" type="button" class="btn btn-outline-light my-1" tabindex="-1" role="button" aria-disabled="true">
                               <font-awesome-icon :icon="['fas', 'eye']" />
                           </RouterLink>
                       </td>
@@ -60,24 +61,17 @@ export default {
       customers: [],
       baseUrl: 'https://localhost:7071',
       auth: false,
-      manager: false,
     }
   },
   mounted() {
     this.getCustomers();
     this.isAuth();
-    this.isManager();
   },
   methods: {
     isAuth() {
       if (localStorage.getItem('token') && localStorage.getItem('role') != 'Customer'){
         this.auth = true;
         console.log('auth', this.auth);
-      }
-    },
-    isManager(){
-      if(localStorage.getItem('role') == 'Manager'){
-        this.manager = true;
       }
     },
     getCustomers() {

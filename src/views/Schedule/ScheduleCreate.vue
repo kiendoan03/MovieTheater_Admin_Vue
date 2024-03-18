@@ -1,6 +1,13 @@
+
 <template>
     <h1>Add schedule</h1>
-    <div class="row">
+    <div v-if="!manager">
+        <h2 class="text-danger text-center my-5">
+            <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+            You are not authorized to access this page
+        </h2>
+    </div>
+    <div v-if="manager" class="row">
         <div class="row">
             <div class="col-8">
                 <div class="mb-3">
@@ -49,14 +56,21 @@ export default{
                 }
             },
             rooms: [],
-            movies: []
+            movies: [],
+            manager: false,
         }
     },
     mounted(){
         this.fetchRooms();
         this.fetchMovies();
+        this.isManager();
     },
     methods:{
+        isManager(){
+            if(localStorage.getItem('role') == 'Manager'){
+                this.manager = true;
+            }
+        },
         fetchRooms(){
             axios.get('https://localhost:7071/api/Rooms').then(response => {
                 this.rooms = response.data;

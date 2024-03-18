@@ -1,5 +1,12 @@
 <template>
-    <div>
+    <div v-if="!manager">
+        <h1>Add Staff</h1>
+        <h2 class="text-center text-danger my-5">
+            <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+            You are not authorized to access this page
+        </h2>
+    </div>
+    <div v-if="manager">
         <h1>Add Staff</h1>
         <div class="row">
             <div class="col-8">
@@ -76,9 +83,18 @@ export default {
                 }
             },  
             previewImage: '',
+            manager: false,
         }
     },
+    mounted() {
+        this.isManager();
+    },
     methods: {
+        isManager(){
+            if(localStorage.getItem('role') == 'Manager'){
+                this.manager = true;
+            }
+        },
         saveStaff() {
             const formData = new FormData();
             formData.append('name', this.model.staff.name);

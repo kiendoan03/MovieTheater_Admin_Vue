@@ -1,8 +1,10 @@
+
 <template>
     <div>
         <div v-if="!manager">
             <h1 class="text-light">Customer Detail</h1>
             <h2 class="text-center text-danger my-5">
+                <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
                 You are not authorized to access this page
             </h2>
         </div>

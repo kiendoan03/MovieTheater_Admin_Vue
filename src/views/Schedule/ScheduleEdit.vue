@@ -1,4 +1,12 @@
 <template>
+    <div v-if="!manager">
+    <h1 class="text-light">Edit Schedule</h1>
+    <h2 class="my-5 text-danger text-center">
+      <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+      You are not authorized to access this page
+    </h2>
+  </div>
+  <div v-if="manager">
     <h1>Edit schedule</h1>
     <div class="row">
         <div class="row">
@@ -32,6 +40,8 @@
         </div>
         <button type="button" @click="editSchedule" class="btn btn-danger my-2 col-2" name="submit_btn">Add</button>
     </div>
+</div>
+    
 </template>
 
 <script lang="ts">
@@ -49,7 +59,8 @@ export default{
                 }
             },
             rooms: [],
-            movies: []
+            movies: [],
+            manager: false,
         }
     },
     mounted(){
@@ -57,8 +68,14 @@ export default{
         this.fetchMovies();
         this.scheduleId = this.$route.params.id;
         this.getSchedule(this.$route.params.id);
+        this.isManager();
     },
     methods:{
+        isManager(){
+            if(localStorage.getItem('role') == 'Manager'){
+                this.manager = true;
+            }
+        },
         getSchedule(scheduleId){
             axios.get(`https://localhost:7071/api/Schedules/${scheduleId}`).then(response => {
                 this.model.schedule = response.data;

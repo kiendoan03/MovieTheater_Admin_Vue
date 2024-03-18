@@ -3,13 +3,19 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-// import axios from 'axios';
 
 library.add(fas)
 
 </script>
 <template>
-  <main>
+  <div v-if="!auth">
+    <h1 class="text-light">Schedule management page</h1>
+    <h2 class="my-5 text-danger text-center">
+      <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+      You are not authorized to access this page
+    </h2>
+  </div>
+  <main v-if="auth">
     <h1>Schedule  management page</h1>
     <RouterLink to="/schedule/create" type="button" class="btn btn-outline-light my-4" tabindex="-1" role="button" aria-disabled="true">
         <font-awesome-icon :icon="['fas', 'fa-plus']"></font-awesome-icon> New schedule
@@ -56,13 +62,20 @@ export default {
   name: 'ScheduleView',
   data() {
     return {
-      schedules: []
+      schedules: [],
+      auth: false,
     }
   },
   mounted() {
     this.getSchedules();
+    this.isAuth();
   },
   methods: {
+    isAuth(){
+      if(localStorage.getItem('token') && localStorage.getItem('role') != 'Customer'){
+        this.auth = true;
+      }
+    },
     getSchedules() {
       axios.get('https://localhost:7071/api/Schedules/get-schedules-with-movie-room')
         .then(response => {

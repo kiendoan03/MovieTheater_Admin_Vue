@@ -1,5 +1,20 @@
+<script setup lang = "ts">
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(fas)
+
+</script>
 <template>
-    <div>
+    <div v-if="!manager">
+        <h1>Add new room</h1>
+        <h2 class="text-danger text-center my-5">
+            <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+            You are not authorized to access this page
+        </h2>
+    </div>
+    <div v-if="manager">
         <h1>Add new Room</h1>
         <div class="row">
             <div class="col-8">
@@ -33,9 +48,18 @@ export default {
                     roomTypeId:''
                 }
             },  
+            manager: false,
         }
     },
+    mounted() {
+        this.isManager();
+    },
     methods: {
+        isManager(){
+            if(localStorage.getItem('role') == 'Manager'){
+                this.manager = true;
+            }
+        },
         saveRoom() {
             axios.post('https://localhost:7071/api/Rooms', this.model.room).then(response => {
                 console.log(response.data);

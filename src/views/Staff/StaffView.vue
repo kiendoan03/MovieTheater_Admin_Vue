@@ -9,7 +9,14 @@ library.add(fas)
 </script>
 
 <template>
-  <div>
+  <div v-if="!auth">
+    <h1>Staff manager page</h1>
+    <h2 class="text-center text-danger my-5">
+      <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+      You are not authorized to access this page
+    </h2>
+  </div>
+  <div v-if="auth">
     <h1>Staff management page</h1>
     <RouterLink to="/staff/create" type="button" class="btn btn-outline-light my-4" tabindex="-1" role="button" aria-disabled="true">
         <font-awesome-icon :icon="['fas', 'fa-plus']"></font-awesome-icon> New staff
@@ -55,13 +62,20 @@ export default {
   data() {
     return {
       staffs: [],
-      baseUrl: 'https://localhost:7071'
+      baseUrl: 'https://localhost:7071',
+      auth: false
     }
   },
   mounted() {
     this.getStaffs();
+    this.isAuth();
   },
   methods: {
+    isAuth() {
+      if (localStorage.getItem('token') && localStorage.getItem('role') != 'Customer'){
+        this.auth = true;
+      }
+    },
     getStaffs() {
       axios.get('https://localhost:7071/api/Staffs').then(response => {
         // Xử lý dữ liệu trả về

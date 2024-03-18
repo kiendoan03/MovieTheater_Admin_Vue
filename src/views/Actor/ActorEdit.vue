@@ -1,8 +1,17 @@
+<script setup lang = "ts">
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(fas)
+
+</script>
 <template>
     <div>
         <div v-if="!manager">
             <h1>Edit Actor</h1>
             <h2 class="text-center text-danger my-5">
+                <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
                 You are not authorized to access this page
             </h2>
         </div>

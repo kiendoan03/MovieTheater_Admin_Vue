@@ -1,5 +1,12 @@
 <template>
-    <div>
+    <div v-if="!manager">
+        <h1>Eidt Staff</h1>
+        <h2 class="text-center text-danger my-5">
+            <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+            You are not authorized to access this page
+        </h2>
+    </div>
+    <div v-if="manager">
         <h1>Edit Staff</h1>
         <div v-if="errorMessage" class="text-danger">{{ errorMessage }}</div>
         <div class="row">
@@ -80,14 +87,21 @@ export default {
             previewImage: '',
             baseUrl: 'https://localhost:7071',
             errorMessage: '',
-            errorPassword: ''
+            errorPassword: '',
+            manager: false
         }
     },
     mounted() {
         this.staffId = this.$route.params.id;
         this.getStaff(this.$route.params.id);
+        this.isManager();
     },
     methods: {
+        isManager(){
+            if(localStorage.getItem('role') == 'Manager'){
+                this.manager = true;
+            }
+        },
         getStaff(staffId) {
             axios.get(`https://localhost:7071/api/Staffs/${staffId}`).then(response => {
                 console.log(response.data);

@@ -1,5 +1,20 @@
+<script setup lang = "ts">
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(fas)
+
+</script>
 <template>
-    <div>
+    <div v-if="!manager">
+        <h1>Edit Director</h1>
+            <h2 class="text-center text-danger my-5">
+                <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+                You are not authorized to access this page
+            </h2>
+    </div>
+    <div v-if="manager">
         <h1>Edit Director</h1>
         <div class="row">
             <div class="col-8">
@@ -40,13 +55,20 @@ export default {
             },
             baseUrl: 'https://localhost:7071',
             previewImage: '',
+            manager: false,
         };
     },
     mounted() {
         this.directorId = this.$route.params.id;
         this.getDirector(this.$route.params.id);
+        this.isManager();
     },
     methods: {
+        isManager(){
+            if(localStorage.getItem('role') == 'Manager'){
+                this.manager = true;
+            }
+        },
         getDirector(directorId) {
             axios.get(`https://localhost:7071/api/Directors/${directorId}`).then(response => {
                 console.log(response.data);
