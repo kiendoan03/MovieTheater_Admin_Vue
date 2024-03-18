@@ -82,13 +82,20 @@ export default {
       });
     },
     deleteGenre(genreId){
-        axios.delete(`https://localhost:7071/api/Genres/${genreId}`).then(response => {
-            console.log(response.data);
-            alert('Genre deleted successfully');
-            this.getActors();
-        }).catch(error => {
-            console.error('Error deleting genre:', error);
-        });
+        if(localStorage.getItem('role') != 'Manager'){
+            alert('You are not authorized to delete genre');
+            return;
+        }else{
+            if(confirm('Are you sure you want to delete this genre?')){
+                  axios.delete(`https://localhost:7071/api/Genres/${genreId}`).then(response => {
+                  console.log(response.data);
+                  alert('Genre deleted successfully');
+                  this.getActors();
+              }).catch(error => {
+                  console.error('Error deleting genre:', error);
+              });
+            }
+        }
     }
   }
 }

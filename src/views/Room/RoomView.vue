@@ -81,13 +81,20 @@ export default {
       });
     },
     deleteRoom(roomId){
-        axios.delete(`https://localhost:7071/api/Rooms/${roomId}`).then(response => {
+      if(localStorage.getIten('role') == 'Manager'){
+        if(confirm('Are you sure to delete this room?')){
+           axios.delete(`https://localhost:7071/api/Rooms/${roomId}`).then(response => {
             console.log(response.data);
             alert('Room deleted successfully');
             this.getRooms();
-        }).catch(error => {
-            console.error('Error deleting room:', error);
-        });
+          }).catch(error => {
+              console.error('Error deleting room:', error);
+          });
+        }
+      }else{
+        alert('You are not authorized to delete this room');
+      }
+       
     }
   }
 }

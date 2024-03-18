@@ -88,13 +88,20 @@ export default {
       });
     },
     deleteDirector(directorId){
-        axios.delete(`https://localhost:7071/api/Directors/${directorId}`).then(response => {
+      if(localStorage.getItem('role') != 'Manager'){
+        if(confirm('Are you sure you want to delete this director?')){
+          axios.delete(`https://localhost:7071/api/Directors/${directorId}`).then(response => {
             console.log(response.data);
             alert('Director deleted successfully');
             this.getActors();
-        }).catch(error => {
-            console.error('Error deleting director:', error);
-        });
+            }).catch(error => {
+                console.error('Error deleting director:', error);
+            });
+        }else{
+          alert('You are not authorized to delete director');
+          return;
+        }
+      }
     }
   }
 }

@@ -92,13 +92,22 @@ export default {
       });
     },
     deleteCast(castId){
-        axios.delete(`https://localhost:7071/api/Casts/${castId}`).then(response => {
-            console.log(response.data);
-            alert('Actor deleted successfully');
-            this.getActors();
-        }).catch(error => {
-            console.error('Error deleting actor:', error);
-        });
+      if(localStorage.getItem('token') && localStorage.getItem('role') == 'Manager'){
+        if(confirm('Are you sure you want to delete this actor?')){
+             axios.delete(`https://localhost:7071/api/Casts/${castId}`).then(response => {
+                console.log(response.data);
+                alert('Actor deleted successfully');
+                this.getActors();
+            }).catch(error => {
+                console.error('Error deleting actor:', error);
+            });
+        }
+      }else{
+        alert('You are not authorized to delete actor');
+        return;
+      }
+
+       
     }
   }
 }

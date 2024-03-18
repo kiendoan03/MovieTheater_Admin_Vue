@@ -138,13 +138,19 @@ library.add(fas)
         });
       },
       deleteMovie(movieId){
-        axios.delete(`https://localhost:7071/api/Movies/${movieId}`).then(response => {
+        if(localStorage.getItem('role') == 'Manager'){
+          if(confirm('Are you sure to delete this movie?')){
+             axios.delete(`https://localhost:7071/api/Movies/${movieId}`).then(response => {
             console.log(response.data);
             alert('Movie deleted successfully');
             this.getActors();
         }).catch(error => {
             console.error('Error deleting movie:', error);
         });
+          }
+        }else{
+          alert('You are not authorized to delete movie');
+        }
     }
     }
   }
