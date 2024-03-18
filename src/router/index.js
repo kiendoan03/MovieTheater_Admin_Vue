@@ -1,30 +1,30 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import ActorView from '../views/Admin/Actor/ActorView.vue'
-import CustomerView from '../views/Admin/Customer/CustomerView.vue'
-import DirectorView from '../views/Admin/Director/DirectorView.vue'
-import GenreView from '../views/Admin/Genre/GenreView.vue'
-import MovieView from '../views/Admin/Movie/MovieView.vue'
-import RoomView from '../views/Admin/Room/RoomView.vue'
-import ScheduleView from '../views/Admin/Schedule/ScheduleView.vue'
-import StaffView from '../views/Admin/Staff/StaffView.vue'
-import ActorCreate from '../views/Admin/Actor/ActorCreate.vue'
-import ActorEdit from '../views/Admin/Actor/ActorEdit.vue'
-import CustomerDetail from '../views/Admin/Customer/CustomerDetail.vue'
-import MovieCreate from '@/views/Admin/Movie/MovieCreate.vue'
-import MovieEdit from '@/views/Admin/Movie/MovieEdit.vue'
-import DirectorCreate from '@/views/Admin/Director/DirectorCreate.vue'
-import DirectorEdit from '@/views/Admin/Director/DirectorEdit.vue'
-import GenreCreate from '@/views/Admin/Genre/GenreCreate.vue'
-import GenreEdit from '@/views/Admin/Genre/GenreEdit.vue'
-import RoomCreate from '@/views/Admin/Room/RoomCreate.vue'
-import RoomDetail from '@/views/Admin/Room/RoomDetail.vue'
-import ScheduleCreate from '@/views/Admin/Schedule/ScheduleCreate.vue'
-import ScheduleEdit from '@/views/Admin/Schedule/ScheduleEdit.vue'
-import ScheduleDetail from '@/views/Admin/Schedule/ScheduleDetail.vue'
-import StaffCreate from '@/views/Admin/Staff/StaffCreate.vue'
-import StaffEdit from '@/views/Admin/Staff/StaffEdit.vue'
-import AdminView from '@/views/Admin/DashboardAdmin.vue'
+import ActorView from '../views/Actor/ActorView.vue'
+import CustomerView from '../views/Customer/CustomerView.vue'
+import DirectorView from '../views/Director/DirectorView.vue'
+import GenreView from '../views/Genre/GenreView.vue'
+import MovieView from '../views/Movie/MovieView.vue'
+import RoomView from '../views/Room/RoomView.vue'
+import ScheduleView from '../views/Schedule/ScheduleView.vue'
+import StaffView from '../views/Staff/StaffView.vue'
+import ActorCreate from '../views/Actor/ActorCreate.vue'
+import ActorEdit from '../views/Actor/ActorEdit.vue'
+import CustomerDetail from '../views/Customer/CustomerDetail.vue'
+import MovieCreate from '@/views/Movie/MovieCreate.vue'
+import MovieEdit from '@/views/Movie/MovieEdit.vue'
+import DirectorCreate from '@/views/Director/DirectorCreate.vue'
+import DirectorEdit from '@/views/Director/DirectorEdit.vue'
+import GenreCreate from '@/views/Genre/GenreCreate.vue'
+import GenreEdit from '@/views/Genre/GenreEdit.vue'
+import RoomCreate from '@/views/Room/RoomCreate.vue'
+import RoomDetail from '@/views/Room/RoomDetail.vue'
+import ScheduleCreate from '@/views/Schedule/ScheduleCreate.vue'
+import ScheduleEdit from '@/views/Schedule/ScheduleEdit.vue'
+import ScheduleDetail from '@/views/Schedule/ScheduleDetail.vue'
+import StaffCreate from '@/views/Staff/StaffCreate.vue'
+import StaffEdit from '@/views/Staff/StaffEdit.vue'
+import LoginView from '@/components/LoginView.vue'
 
 const router = createRouter({
     history: createWebHistory(
@@ -44,127 +44,127 @@ const router = createRouter({
                 import ('../views/AboutView.vue')
         },
         {
-            path: '/admin',
-            name: 'admin',
-            component: AdminView
+            path: '/login',
+            name: 'Login',
+            component: LoginView
         },
         {
-            path: '/admin/actor',
+            path: '/actor',
             name: 'actor',
             component: ActorView
         },
         {
-            path: '/admin/actor/create',
+            path: '/actor/create',
             name: 'actorCreate',
             component: ActorCreate
         },
         {
-            path: '/admin/actor/edit/:id',
+            path: '/actor/edit/:id',
             name: 'actorEdit',
             component: ActorEdit
         },
         {
-            path: '/admin/customer',
+            path: '/customer',
             name: 'customer',
             component: CustomerView
         },
         {
-            path: '/admin/customer/detail/:id',
+            path: '/customer/detail/:id',
             name: 'customerDetail',
             component: CustomerDetail
         },
         {
-            path: '/admin/director',
+            path: '/director',
             name: 'director',
             component: DirectorView
         },
         {
-            path: '/admin/director/create',
+            path: '/director/create',
             name: 'directorCreate',
             component: DirectorCreate
         },
         {
-            path: '/admin/director/edit/:id',
+            path: '/director/edit/:id',
             name: 'directorEdit',
             component: DirectorEdit
         },
         {
-            path: '/admin/genre',
+            path: '/genre',
             name: 'genre',
             component: GenreView
         },
         {
-            path: '/admin/genre/create',
+            path: '/genre/create',
             name: 'genreCreate',
             component: GenreCreate
         },
         {
-            path: '/admin/genre/edit/:id',
+            path: '/genre/edit/:id',
             name: 'genreEdit',
             component: GenreEdit
         },
         {
-            path: '/admin/movie',
+            path: '/movie',
             name: 'movie',
             component: MovieView
         },
         {
-            path: '/admin/movie/create',
+            path: '/movie/create',
             name: 'movieCreate',
             component: MovieCreate
         },
         {
-            path: '/admin/movie/edit/:id',
+            path: '/movie/edit/:id',
             name: 'movieEdit',
             component: MovieEdit
         },
         {
-            path: '/admin/room',
+            path: '/room',
             name: 'room',
             component: RoomView
         },
         {
-            path: '/admin/room/create',
+            path: '/room/create',
             name: 'roomCreate',
             component: RoomCreate
         },
         {
-            path: '/admin/room/detail/:id',
+            path: '/room/detail/:id',
             name: 'roomDetail',
             component: RoomDetail
         },
         {
-            path: '/admin/schedule',
+            path: '/schedule',
             name: 'schedule',
             component: ScheduleView
         },
         {
-            path: '/admin/schedule/create',
+            path: '/schedule/create',
             name: 'scheduleCreate',
             component: ScheduleCreate
         },
         {
-            path: '/admin/schedule/edit/:id',
+            path: '/schedule/edit/:id',
             name: 'scheduleEdit',
             component: ScheduleEdit
         },
         {
-            path: '/admin/schedule/detail/:id',
+            path: '/schedule/detail/:id',
             name: 'scheduleDeatil',
             component: ScheduleDetail
         },
         {
-            path: '/admin/staff',
+            path: '/staff',
             name: 'staff',
             component: StaffView
         },
         {
-            path: '/admin/staff/create',
+            path: '/staff/create',
             name: 'staffCreate',
             component: StaffCreate
         },
         {
-            path: '/admin/staff/edit/:id',
+            path: '/staff/edit/:id',
             name: 'staffEdit',
             component: StaffEdit
         },

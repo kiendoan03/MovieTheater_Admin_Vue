@@ -4,7 +4,9 @@
 
 <template>
   <main>
-    <h1>Home page</h1>
-    <!-- <TheWelcome /> -->
+    <h1>Dashboard</h1>
+
   </main>
 </template>
+
+

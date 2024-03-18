@@ -7,7 +7,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import 'bootstrap/dist/js/bootstrap.bundle'
 const app = createApp(App)
-
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token')
 app.use(router)
 app.use(VueAxios, axios)
 

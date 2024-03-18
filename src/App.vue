@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import HeaderAdmin from './components/Admin/HeaderAdmin.vue'
+import HeaderAdmin from './components/HeaderAdmin.vue'
 </script>
 
 <template> 
