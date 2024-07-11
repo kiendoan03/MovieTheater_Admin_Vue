@@ -33,8 +33,8 @@ library.add(fas)
                 </tr>
             </thead>
             <tbody class="table-group-divider">
-                <tr v-for="(room, index) in rooms" :key="room.id">
-                    <th scope="row" class="col-1">{{ index + 1 }}</th>
+                <tr v-for="(room, index) in paginatedRooms" :key="room.id">
+                    <th scope="row" class="col-1">{{ index + 1 + (currentPage - 1) * pageSize }}</th>
                     <td class="col-3">{{ room.roomName}}</td>
                     <td class="col-3" v-if="room.roomTypeId == 1">Normal</td>
                     <td class="col-3" v-else>Vip</td>
@@ -51,6 +51,11 @@ library.add(fas)
                 </tr>
             </tbody>
         </table>
+          <div class="pagination">
+            <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">Previous</button>
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">Next</button>
+          </div>
     </div>
   </div>
 </template>
@@ -63,6 +68,16 @@ export default {
     return {
       rooms: [],
       auth: false,
+      currentPage: 1,
+      pageSize: 4,
+      totalPages: 1,
+    }
+  },
+  computed: {
+    paginatedRooms() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.rooms.slice(start, end);
     }
   },
   mounted() {
@@ -78,6 +93,7 @@ export default {
     getRooms() {
       axios.get('https://localhost:7071/api/Rooms').then(response => {
         this.rooms = response.data;
+        this.totalPages = Math.ceil(this.rooms.length / this.pageSize);
       });
     },
     deleteRoom(roomId){
@@ -95,8 +111,42 @@ export default {
         alert('You are not authorized to delete this room');
       }
        
+    },
+    changePage(page) {
+      if (page > 0 && page <= this.totalPages) {
+        this.currentPage = page;
+      }
     }
   }
 }
 </script>
+
+<style scoped>
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #343a40;
+  color: white;
+  border: 1px solid #6c757d;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.pagination button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  margin: 0 10px;
+  color: white;
+}
+</style>
 

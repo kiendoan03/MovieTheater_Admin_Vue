@@ -17,9 +17,12 @@ library.add(fas)
   </div>
   <main v-if="auth">
     <h1>Schedule  management page</h1>
-    <RouterLink to="/schedule/create" type="button" class="btn btn-outline-light my-4" tabindex="-1" role="button" aria-disabled="true">
+    <div class="header-container">
+      <RouterLink to="/schedule/create" type="button" class="btn btn-outline-light my-4" tabindex="-1" role="button" aria-disabled="true">
         <font-awesome-icon :icon="['fas', 'fa-plus']"></font-awesome-icon> New schedule
-    </RouterLink>
+      </RouterLink>
+      <input type="date" v-model="filterDate" class="form-control mb-3 date-input" @change="onDateChange"/>
+    </div>
     <div class="mt-2">
       <table class="table table-dark table-hover">
         <thead>
@@ -34,8 +37,8 @@ library.add(fas)
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(schedule, index) in schedules" :key="schedule.id">
-            <td scope="row" class ="col-1">{{ index + 1 }}</td>
+          <tr v-for="(schedule, index) in paginatedSchedules" :key="schedule.id">
+            <td scope="row" class ="col-1">{{ index + 1 + (currentPage - 1) * pageSize }}</td>
             <td class="col-3">{{schedule.movie.movieName}}</td>
             <td class="col-2">{{schedule.room.roomName}}</td>
             <td class="col-2">{{ schedule.scheduleDate }}</td>
@@ -52,6 +55,11 @@ library.add(fas)
           </tr>
         </tbody>
       </table>
+      <div class="pagination">
+            <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">Previous</button>
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">Next</button>
+          </div>
     </div>
   </main>
 </template>
@@ -64,6 +72,17 @@ export default {
     return {
       schedules: [],
       auth: false,
+      currentPage: 1,
+      pageSize: 4,
+      totalPages: 1,
+      filterDate: null,
+    }
+  },
+  computed: {
+    paginatedSchedules() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.schedules.slice(start, end);
     }
   },
   mounted() {
@@ -81,11 +100,69 @@ export default {
         .then(response => {
           console.log(response.data);
           this.schedules = response.data;
+          if (this.filterDate) {
+            this.schedules = this.schedules.filter(schedule => {
+              const [day, month, year] = schedule.scheduleDate.split('/');
+              const scheduleDate = new Date(`${year}-${month}-${day}`);
+              return scheduleDate.toDateString() === new Date(this.filterDate).toDateString();
+            });
+          }
+          this.totalPages = Math.ceil(this.schedules.length / this.pageSize);
         })
         .catch(error => {
           console.error('Error fetching schedules:', error);
         });
+    },
+    changePage(page) {
+      if (page > 0 && page <= this.totalPages) {
+        this.currentPage = page;
+      }
+    },
+    onDateChange() {
+      this.getSchedules();
     }
   }
 }
 </script>
+
+<style scoped>
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date-input {
+  width: 200px;
+  background-color: gray;
+  color: white; 
+  border: none;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #343a40;
+  color: white;
+  border: 1px solid #6c757d;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.pagination button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  margin: 0 10px;
+  color: white;
+}
+</style>

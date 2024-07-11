@@ -34,8 +34,8 @@ library.add(fas)
                 </tr>
             </thead>
             <tbody class="table-group-divider">
-                <tr v-for="(staff, index) in staffs" :key="staff.id">
-                    <th scope="row" class="col-1">{{ index + 1 }}</th>
+                <tr v-for="(staff, index) in paginatedStaffs" :key="staff.id">
+                    <th scope="row" class="col-1">{{ index + 1 + (currentPage - 1) * pageSize }}</th>
                     <td class="col-3">{{ staff.name}}</td>
                     <td class="col-3">{{ staff.email}}</td>
                     <td class="col-3">
@@ -51,6 +51,11 @@ library.add(fas)
                 </tr>
             </tbody>
         </table>
+          <div class="pagination">
+            <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">Previous</button>
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">Next</button>
+          </div>
     </div>  
   </div>
 </template>
@@ -63,7 +68,17 @@ export default {
     return {
       staffs: [],
       baseUrl: 'https://localhost:7071',
-      auth: false
+      auth: false,
+      currentPage: 1,
+      pageSize: 4,
+      totalPages: 1,
+    }
+  },
+  computed: {
+    paginatedStaffs() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.staffs.slice(start, end);
     }
   },
   mounted() {
@@ -86,12 +101,46 @@ export default {
           staffRole: staff.staffRole,
           image: this.baseUrl + staff.image
         }));
+        this.totalPages = Math.ceil(this.staffs.length / this.pageSize);
         console.log(this.staffs);
       }).catch(error => {
         console.error('Error fetching staffs:', error);
       });
     },
+    changePage(page) {
+      if (page > 0 && page <= this.totalPages) {
+        this.currentPage = page;
+      }
+    }
   }
 }
 </script>
 
+<style scoped>
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #343a40;
+  color: white;
+  border: 1px solid #6c757d;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.pagination button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  margin: 0 10px;
+  color: white;
+}
+</style>
