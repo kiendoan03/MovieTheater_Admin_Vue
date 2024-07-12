@@ -58,16 +58,18 @@ export default {
             previewImage: '',
             manager: false,
         }
+    }, 
+    mounted() {
+        this.isManager();
     },
     methods: {
         isManager(){
             if(localStorage.getItem('role') == 'Manager'){
                 this.manager = true;
             }
+            console.log('mam',this.manager)
         },
-        mounted() {
-            this.isManager();
-        },
+       
         saveDirector() {
             const formData = new FormData();
             formData.append('directorName', this.model.director.DirectorName);

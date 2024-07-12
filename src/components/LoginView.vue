@@ -45,13 +45,15 @@ import axios from 'axios';
                         if(response.data.role == 'Staff'){
                             console.log(response.data);
                             alert('Login successfully - Staff');
-                            this.$router.push('/');
+                            // this.$router.push('/');
+                            window.location.href = '/';
                             localStorage.setItem('token', response.data.token);
                             localStorage.setItem('role', response.data.role);
                         }else if(response.data.role == 'Manager'){
                             console.log(response.data);
                             alert('Login successfully - Manager');
-                            this.$router.push('/');
+                            // this.$router.push('/');
+                            window.location.href = '/';
                             localStorage.setItem('token', response.data.token);
                             localStorage.setItem('role', response.data.role);
                         }

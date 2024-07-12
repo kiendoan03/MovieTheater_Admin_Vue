@@ -38,7 +38,7 @@
 
             </div>
         </div>
-        <button type="button" @click="editSchedule" class="btn btn-danger my-2 col-2" name="submit_btn">Add</button>
+        <button type="button" @click="editSchedule" class="btn btn-danger my-2 col-2" name="submit_btn">Update</button>
     </div>
 </div>
     
