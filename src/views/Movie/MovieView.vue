@@ -24,13 +24,30 @@ library.add(fas)
       </div>
    </div>
         
-  <div class="row">
-    <div class="col-12">
-      <RouterLink to="/movie/create" type="button" class="btn btn-outline-light my-4" tabindex="-1" role="button" aria-disabled="true">
-        <font-awesome-icon :icon="['fas', 'fa-plus']"></font-awesome-icon> Upload new movie
-    </RouterLink>
+   <div class="row d-flex justify-content-between align-items-center">
+      <div class="col-auto">
+        <RouterLink to="/movie/create" type="button" class="btn btn-outline-light my-4" tabindex="-1" role="button" aria-disabled="true">
+          <font-awesome-icon :icon="['fas', 'fa-plus']"></font-awesome-icon> Upload new movie
+        </RouterLink>
+      </div>  
+      <div class="col-auto"> 
+          <font-awesome-icon :icon="['fas', 'filter']" style=" font-size: 1.5rem; " class="mx-3" />
+        <div class="btn-group my-4" role="group">
+          <button type="button" class="btn btn-outline-light" @click="filterStatus = 'all'">
+            All
+          </button>
+          <button type="button" class="btn btn-outline-light" @click="filterStatus = 'showing'">
+            Showing
+          </button>
+          <button type="button" class="btn btn-outline-light" @click="filterStatus = 'upcoming'">
+            Upcoming
+          </button>
+          <button type="button" class="btn btn-outline-light" @click="filterStatus = 'end'">
+            End
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
 
   <div class="row">
     <div class="col">
@@ -39,7 +56,7 @@ library.add(fas)
           <tr>
             <th scope="col">No</th>
             <th scope="col">Movie Name</th>
-            <th scope="col">Rating</th>
+            <!-- <th scope="col">Rating</th> -->
             <th scope="col">Poster</th>
             <th scope="col">Release date</th>
             <th scope="col">End date</th>
@@ -50,10 +67,10 @@ library.add(fas)
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(movie, index) in paginatedMovies" :key="movie.id">
+          <tr v-for="(movie, index) in filteredMovies" :key="movie.id">
             <th scope="row" class="col-1">{{ index + 1 + (currentPage - 1) * pageSize }}</th>
             <td class="col-2">{{ movie.movieName }}</td>
-            <td class="col-1">{{movie.rating}}/5</td>
+            <!-- <td class="col-1">{{movie.rating}}/5</td> -->
             <td class="col-2">
               <img class="col-12 rounded-3 w-75" :src="movie.poster">
             </td>
@@ -111,13 +128,27 @@ library.add(fas)
         currentPage: 1,
         pageSize: 4,
         totalPages: 1,
+        filterStatus: 'all' 
       }
     },
     computed: {
-      paginatedMovies() {
+      // paginatedMovies() {
+      //   const start = (this.currentPage - 1) * this.pageSize;
+      //   const end = start + this.pageSize;
+      //   return this.movies.slice(start, end);
+      // },
+      filteredMovies() {
+        let filtered = this.movies;
+        if (this.filterStatus === 'showing') {
+          filtered = filtered.filter(movie => this.formatDate(movie.releaseDate) <= this.today && this.today <= this.formatDate(movie.endDate));
+        } else if (this.filterStatus === 'upcoming') {
+          filtered = filtered.filter(movie => this.formatDate(movie.releaseDate) > this.today);
+        } else if (this.filterStatus === 'end') {
+          filtered = filtered.filter(movie => this.formatDate(movie.endDate) < this.today);
+        }
         const start = (this.currentPage - 1) * this.pageSize;
         const end = start + this.pageSize;
-        return this.movies.slice(start, end);
+        return filtered.slice(start, end);
       }
     },
     mounted() {
