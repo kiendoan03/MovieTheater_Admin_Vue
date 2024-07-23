@@ -37,7 +37,7 @@
             <p>{{ moviesStoppedShowing }}</p>
           </div>
         </div>
-        <div class="stat-item">
+        <!-- <div class="stat-item">
           <div class="stat-icon">
             <font-awesome-icon icon="ticket-alt" />
           </div>
@@ -54,7 +54,7 @@
             <h3>Total revenue</h3>
             <p>{{ totalSales ? totalSales.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) : 'N/A' }}</p>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </template>
@@ -74,8 +74,8 @@
         moviesNowShowing: 0,
         upcomingMovies: 0,
         moviesStoppedShowing: 0,
-        ticketsSold: 0,
-        totalSales: 0
+        //ticketsSold: 0,
+        //totalSales: 0
       };
     },
     methods: {
@@ -115,32 +115,32 @@
             console.error('Error fetching movies stopped showing:', error);
           });
       },
-      fetchTicketsSold() {
-        axios.get('https://localhost:7071/api/Tickets/count-tickets-sold')
-          .then(response => {
-            this.ticketsSold = response.data;
-          })
-          .catch(error => {
-            console.error('Error fetching tickets sold:', error);
-          });
-      },
-      fetchTotalSales() {
-        axios.get('https://localhost:7071/api/Tickets/get-total-income')
-          .then(response => {
-            this.totalSales = response.data;
-          })
-          .catch(error => {
-            console.error('Error fetching total sales:', error);
-          });
-      }
+      // fetchTicketsSold() {
+      //   axios.get('https://localhost:7071/api/Tickets/count-tickets-sold')
+      //     .then(response => {
+      //       this.ticketsSold = response.data;
+      //     })
+      //     .catch(error => {
+      //       console.error('Error fetching tickets sold:', error);
+      //     });
+      // },
+      // fetchTotalSales() {
+      //   axios.get('https://localhost:7071/api/Tickets/get-total-income')
+      //     .then(response => {
+      //       this.totalSales = response.data;
+      //     })
+      //     .catch(error => {
+      //       console.error('Error fetching total sales:', error);
+      //     });
+      // }
     },
     created() {
       this.fetchTotalMovies();
       this.fetchMoviesNowShowing();
       this.fetchUpcomingMovies();
       this.fetchMoviesStoppedShowing();
-      this.fetchTicketsSold();
-      this.fetchTotalSales();
+      // this.fetchTicketsSold();
+      // this.fetchTotalSales();
     }
   };
   </script>
