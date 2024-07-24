@@ -1,5 +1,10 @@
 <script setup lang="ts">
     import { RouterLink } from 'vue-router'
+    import { library } from '@fortawesome/fontawesome-svg-core'
+    import { fas } from '@fortawesome/free-solid-svg-icons'
+    import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+    library.add(fas)
 </script>
 
 <template>
@@ -10,11 +15,14 @@
                             <img src="../assets/image/NetFnix Full logo.png" alt="" height="50" class="d-inline-block align-text-top">
                         </RouterLink>
                         <div class="dropdown">
-                            <img class="col-12 border " style="border-radius: 50%;object-fit: cover; overflow: hidden;height: 3vmax; width: 3vmax;" src="../assets/image/Netflix-avt.png" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
+                            <img class="col-12 border " v-if="auth" style="border-radius: 50%;object-fit: cover; overflow: hidden;height: 3vmax; width: 3vmax;" :src="image" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
+                                height="" alt="">
+                                <img class="col-12 border " v-if="!auth" style="border-radius: 50%;object-fit: cover; overflow: hidden;height: 3vmax; width: 3vmax;" src="../assets/image/Netflix-avt.png" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
                                 height="" alt="">
                             <ul class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton1">
-                                <li><RouterLink v-if="!auth" to="/login" class="dropdown-item bg-dark text-light">Login</RouterLink></li>
-                                <li><Button v-if="auth" @click="logout" class="dropdown-item bg-dark text-light">Logout</Button></li>
+                                <li><RouterLink v-if="!auth" to="/login" class="dropdown-item bg-dark text-light"><font-awesome-icon :icon="['fas', 'right-to-bracket']" style="color: #ffffff;" /> Login</RouterLink></li>
+                                <li><b v-if="auth" class="dropdown-item bg-dark text-light"><font-awesome-icon :icon="['fas', 'user']" style="color: #ffffff;" /> {{ name }} - {{ role }}</b></li>
+                                <li><Button v-if="auth" @click="logout" class="dropdown-item bg-dark text-light"><font-awesome-icon :icon="['fas', 'right-from-bracket']" style="color: #ffffff;" /> Logout</Button></li>
                             </ul>
                         </div>
                     </div>
@@ -44,14 +52,20 @@
 </template>
 
 <script lang="ts">
+import axios from 'axios';
     export default {
     name: 'HeaderAdmin',
     data: function() {
         return {
-            auth: false
+            auth: false,
+            image: '',
+            baseUrl: 'https://localhost:7071',
+            name: localStorage.getItem('name_staff'),
+            role: localStorage.getItem('role')
         }
     },
     mounted() {
+      this.getStaffById(localStorage.getItem('id_staff'));
         this.auth = localStorage.getItem('role') != 'Customer' && localStorage.getItem('token') != null;
         console.log(this.auth);
     },
@@ -59,7 +73,18 @@
         logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('role');
-            this.$router.push('/login');
+            localStorage.removeItem('id_staff');
+            localStorage.removeItem('name_staff');
+            // this.$router.push('/login');
+            window.location.href = '/login';
+        },
+        getStaffById(staffId){
+          axios.get(`https://localhost:7071/api/Staffs/${staffId}`).then(response => {
+                console.log(response.data);
+                this.image = this.baseUrl + response.data.image;
+            }).catch(error => {
+                console.error('Error fetching staff:', error);
+            });       
         }
     }
   }

@@ -102,6 +102,31 @@ export default {
                 this.manager = true;
             }
         },
+        validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        },
+        validatePhoneNumber(phoneNumber) {
+            const re = /^\d{10,15}$/;
+            return re.test(phoneNumber);
+        },
+        validatePassword(password) {
+            const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$/;
+            return re.test(password);
+        },
+        checkDuplicateStaff() {
+            axios.get('https://localhost:7071/api/Customers/check-duplicate-staff?username=' + this.model.staff.username + '&email=' + this.model.staff.email)
+            .then(response => {
+                // if (response.status === 200) {
+                //   alert('Username or email already exists');
+                //   return ;
+                // }
+                return response.data;
+            })
+            .catch(error => {
+                console.error('Error checking duplicate staff:', error.response.data);
+            });
+        },
         getStaff(staffId) {
             axios.get(`https://localhost:7071/api/Staffs/${staffId}`).then(response => {
                 console.log(response.data);
@@ -113,6 +138,28 @@ export default {
             });                
         },
         updateStaff(){
+            // if(this.model.staff.name == '' || this.model.staff.username == '' || this.model.staff.dob == '' || this.model.staff.email == '' || this.model.staff.phoneNumber == '' || this.model.staff.address == '' || this.model.staff.staffRole == ''){
+            //     alert('Please fill all fields');
+            //     return;
+            // }
+            if(!this.validateEmail(this.model.staff.email)){
+                alert('Invalid email');
+                return;
+            }
+            if(!this.validatePhoneNumber(this.model.staff.phoneNumber)){
+                alert('Invalid phone number');
+                return;
+            }
+            if(this.model.staff.password){
+                if(!this.validatePassword(this.model.staff.password)){
+                    alert('Invalid password');
+                    return;
+                }
+            }
+            // if(this.checkDuplicateStaff()){
+            //     alert('Username or email already exists');
+            //     return;
+            // }
             const formData = new FormData();
             formData.append('id', this.staffId);
             formData.append('name', this.model.staff.name);
@@ -151,14 +198,18 @@ export default {
             this.model.staff.image = file;
             this.previewImage = URL.createObjectURL(file);
         },
-        formatDate(date) {
-            // Kiểm tra xem date có tồn tại không để tránh lỗi
-            if (date) {
-                const parts = date.split("/");
-                return `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-            } else {
-                return ''; // Trả về chuỗi rỗng nếu không có date
-            }
+        // formatDate(date) {
+        //     // Kiểm tra xem date có tồn tại không để tránh lỗi
+        //     if (date) {
+        //         const parts = date.split("/");
+        //         return `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+        //     } else {
+        //         return ''; // Trả về chuỗi rỗng nếu không có date
+        //     }
+        // },
+        formatDate(dateString) {
+            const [day, month, year] = dateString.split('/');
+            return `${year}-${month}-${day}`;
         },
     }
 }

@@ -95,7 +95,52 @@ export default {
                 this.manager = true;
             }
         },
+        validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        },
+        validatePhoneNumber(phoneNumber) {
+            const re = /^\d{10,15}$/;
+            return re.test(phoneNumber);
+        },
+        validatePassword(password) {
+            const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$/;
+            return re.test(password);
+        },
+        checkDuplicateStaff() {
+            axios.get('https://localhost:7071/api/Customers/check-duplicate-staff?username=' + this.model.staff.username + '&email=' + this.model.staff.email)
+            .then(response => {
+                // if (response.status === 200) {
+                //   alert('Username or email already exists');
+                //   return ;
+                // }
+                return response.data;
+            })
+            .catch(error => {
+                console.error('Error checking duplicate staff:', error.response.data);
+            });
+        },
         saveStaff() {
+            if(this.model.staff.name == '' || this.model.staff.userName == '' || this.model.staff.dob == '' || this.model.staff.email == '' || this.model.staff.phonenumber == '' || this.model.staff.address == '' || this.model.staff.password == '' || this.model.staff.role == ''){
+                alert('Please fill all fields');
+                return;
+            }
+            if(!this.validateEmail(this.model.staff.email)){
+                alert('Invalid email');
+                return;
+            }
+            if(!this.validatePhoneNumber(this.model.staff.phonenumber)){
+                alert('Invalid phone number');
+                return;
+            }
+            if(!this.validatePassword(this.model.staff.password)){
+                alert('Invalid password');
+                return;
+            }
+            // if(this.checkDuplicateStaff()){
+            //     alert('Username or email already exists');
+            //     return;
+            // }
             const formData = new FormData();
             formData.append('name', this.model.staff.name);
             formData.append('userName', this.model.staff.userName);

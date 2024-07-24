@@ -34,7 +34,19 @@ import axios from 'axios';
             }
         },
         methods: {
+            validatePassword(password) {
+                const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$/;
+                return re.test(password);
+            },
             handleLogin() {
+                if(this.model.account.username == '' || this.model.account.password == '') {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                if(!this.validatePassword(this.model.account.password)) {
+                    alert('Password must contain at least 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character, and be between 8-15 characters');
+                    return;
+                }
                 axios.post('https://localhost:7071/api/Account/login', this.model.account).then(response => {
                     if(response.data.role == 'Customer' ) {
                         alert('You are not admin');
@@ -49,6 +61,8 @@ import axios from 'axios';
                             window.location.href = '/';
                             localStorage.setItem('token', response.data.token);
                             localStorage.setItem('role', response.data.role);
+                            localStorage.setItem('id_staff', response.data.id);
+                            localStorage.setItem('name_staff', response.data.name);
                         }else if(response.data.role == 'Manager'){
                             console.log(response.data);
                             alert('Login successfully - Manager');
@@ -56,6 +70,8 @@ import axios from 'axios';
                             window.location.href = '/';
                             localStorage.setItem('token', response.data.token);
                             localStorage.setItem('role', response.data.role);
+                            localStorage.setItem('id_staff', response.data.id);
+                            localStorage.setItem('name_staff', response.data.name);
                         }
                     }
                 }).catch(error => {
