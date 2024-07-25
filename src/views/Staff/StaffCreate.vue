@@ -162,6 +162,7 @@ export default {
                 this.$router.push('/staff');
             }).catch(error => {
                 console.error('Error adding staff:', error);
+                alert('Error adding staff:' + error.response.data);
             });
         },
         onFileChange(event) {

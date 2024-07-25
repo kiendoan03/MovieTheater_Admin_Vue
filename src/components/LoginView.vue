@@ -76,6 +76,7 @@ import axios from 'axios';
                     }
                 }).catch(error => {
                     console.error('Error login:', error);
+                    alert('Login failed');
                 });
             },
             freshForm() {

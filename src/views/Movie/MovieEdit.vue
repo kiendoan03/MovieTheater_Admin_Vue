@@ -33,7 +33,7 @@ library.add(fas)
             </div>
             <div class="mb-3">
               <label for="language" class="form-label text-light">Language</label>
-              <input id="language" class="form-select bg-dark border-0 shadow-none text-light" v-model="model.movie.language" required>
+              <input id="language" type="text" class="form-select bg-dark border-0 shadow-none text-light" v-model="model.movie.language" required>
             </div>
             <div class="mb-3">
               <label for="country" class="form-label text-light">Country</label>
@@ -266,7 +266,10 @@ library.add(fas)
             });
             console.log(formData);
             console.log(this.model.movie);
-        
+            if(this.model.movie.releaseDate > this.model.movie.endDate){
+              alert('End date must be greater than release date');
+              return;
+            }
             axios.put(`https://localhost:7071/api/Movies/${this.movieId}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'

@@ -38,7 +38,7 @@
 
             </div>
         </div>
-        <button type="button" @click="editSchedule" class="btn btn-danger my-2 col-2" name="submit_btn">Update</button>
+        <button type="button" :class="{ disable: isBooked }" @click="editSchedule" class="btn btn-danger my-2 col-2" name="submit_btn">Update</button>
     </div>
 </div>
     
@@ -61,6 +61,7 @@ export default{
             rooms: [],
             movies: [],
             manager: false,
+            isBooked: false,
         }
     },
     mounted(){
@@ -68,6 +69,7 @@ export default{
         this.fetchMovies();
         this.scheduleId = this.$route.params.id;
         this.getSchedule(this.$route.params.id);
+        this.checkTicketIsBookedInSchedule(this.$route.params.id);
         this.isManager();
     },
     methods:{
@@ -76,6 +78,20 @@ export default{
                 this.manager = true;
             }
         },
+        checkTicketIsBookedInSchedule(scheduleId){
+            axios.get(`https://localhost:7071/api/Tickets/get-tickets-by-schedule?scheduleId=${scheduleId}`)
+                .then(response => {
+                response.data.forEach(ticket => {
+                    if(ticket.status != 0){
+                        console.log('Ticket is booked');    
+                        this.isBooked = true;
+                    }
+                });
+                })
+                .catch(error => {
+                console.error('Error fetching tickets:', error);
+                });
+            },
         getSchedule(scheduleId){
             axios.get(`https://localhost:7071/api/Schedules/${scheduleId}`).then(response => {
                 this.model.schedule = response.data;
@@ -109,6 +125,7 @@ export default{
                 this.$router.push('/schedule');
             }).catch(error => {
                 console.error('Error updating schedule:', error);
+                alert('Error adding schedule: Schedule is conflicted with existing schedules!!!!');
             });
         },
         // formatDate(date) {
@@ -141,3 +158,9 @@ export default{
     },
 }
 </script>
+<style scoped>
+.disable {
+    pointer-events: none;
+    opacity: 0.5;
+}
+</style>

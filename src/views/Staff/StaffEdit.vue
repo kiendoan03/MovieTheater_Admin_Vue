@@ -186,10 +186,11 @@ export default {
                 this.$router.push('/staff');
             }).catch(error => {
                 console.error('Error updating staff:', error);
+                alert('Error updating staff: ' + error.response.data);
                 if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.PasswordHash) {
-                    this.errorPassword = error.response.data.errors.PasswordHash.join(', '); // Nối các thông điệp lỗi lại với nhau
+                    this.errorPassword = error.response.data.errors.PasswordHash.join(', '); 
                 } else {
-                    this.errorMessage = 'An error occurred while updating staff.'; // Nếu không có thông điệp lỗi cụ thể, hiển thị thông điệp lỗi mặc định
+                    this.errorMessage = 'An error occurred while updating staff.'; 
                 }
             });
         },

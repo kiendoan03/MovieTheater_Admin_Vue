@@ -193,6 +193,7 @@ library.add(fas)
             this.getActors();
         }).catch(error => {
             console.error('Error deleting movie:', error);
+            alert('Cannot delete this movie because it is being used in a schedule');
         });
           }
         }else{

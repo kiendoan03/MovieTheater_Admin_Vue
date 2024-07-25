@@ -92,6 +92,7 @@ export default{
                 this.$router.push('/schedule');
             }).catch(error => {
                 console.error('Error adding schedule:', error);
+                alert('Error adding schedule: Schedule is conflicted with existing schedules!!!!');
             });
         },
     }

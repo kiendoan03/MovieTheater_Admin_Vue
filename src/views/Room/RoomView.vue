@@ -97,7 +97,7 @@ export default {
       });
     },
     deleteRoom(roomId){
-      if(localStorage.getIten('role') == 'Manager'){
+      if(localStorage.getItem('role') == 'Manager'){
         if(confirm('Are you sure to delete this room?')){
            axios.delete(`https://localhost:7071/api/Rooms/${roomId}`).then(response => {
             console.log(response.data);
@@ -105,6 +105,7 @@ export default {
             this.getRooms();
           }).catch(error => {
               console.error('Error deleting room:', error);
+              alert('Cannot delete this room because it is being used in a schedule');
           });
         }
       }else{
