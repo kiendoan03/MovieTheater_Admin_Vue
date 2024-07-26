@@ -59,7 +59,9 @@
   <script>
   import { Chart, registerables } from 'chart.js';
   import dayjs from 'dayjs';
-    import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+  import localeData from 'dayjs/plugin/localeData'; 
+  dayjs.extend(localeData);
+  import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
   
   Chart.register(...registerables);
@@ -77,7 +79,8 @@
         revenueForBank: [],
         revenueForGateway: [],
         selectedDateIndex: 3, // Default to "Tháng này"
-        dateOptions: ["Hôm qua", "Hôm nay", "Tuần này", "Tháng này", "Tháng trước", "Năm này", "Năm trước"],
+        // dateOptions: ["Hôm qua", "Hôm nay", "Tuần này", "Tháng này", "Tháng trước", "Năm này", "Năm trước"],
+        dateOptions: ["Yesterday", "Today", "This week", "This month", "Last month", "This year", "Last year"],
         dateRanges: this.calculateDateRanges(),
         isFetchingData: false,
       };
@@ -143,8 +146,9 @@
                 'Authorization': `Bearer ${localStorage.getItem('PayOSToken')}`,
                 },
             });
+            // console.log('response',response);
             const data = await response.json();
-            console.log(data);
+            // console.log('data111',data);
     
             this.revenueThisMonth = data.data.totalPrice;
             this.totalOrdersThisMonth = data.data.totalOrder;
@@ -152,21 +156,49 @@
             this.revenueForGateway = data.data.revenueForGateway;
     
             const chartData = this.prepareChartData(data.data.orders);
-            this.renderChart(chartData);
+            console.log('chartData',chartData);
+              this.renderChart(chartData);
         }catch(error){
             console.error('Lỗi khi lấy dữ liệu PayOS:', error);
         }
       },
     prepareChartData(orders) {
+      console.log('orders',orders);
         const datasets = orders.map((order, index) => ({
         label: order.name,
-        data: order.data,
+        // data: order.data,
+        data: order.data.map(item => ({ ...item })), 
         backgroundColor: this.getBackgroundColor(index),
         borderColor: this.getBorderColor(index),
         borderWidth: 1,
         }));
         console.log('asd',datasets);
+        datasets.forEach((dataset) => {
+          dataset.data = dataset.data.map((data) => ({
+            ...data,
+            x: this.formatXValue(data.x) // Gọi hàm formatXValue để định dạng x
+          }));
+        });
+        
         return { datasets };
+    },
+    formatXValue(xValue) {
+      switch (this.selectedDateIndex) {
+        case 0:
+        case 1:
+          return dayjs(xValue).format('YYYY-MM-DD-HH') + 'h';
+        case 2:
+          xValue = xValue.substring(0,8);
+          return `${dayjs(xValue).format('YYYY-MM-DD')} ${dayjs(xValue).format('ddd')}`;
+        case 3:
+        case 4:
+          return dayjs(xValue).format('YYYY-MM-DD');
+        case 5:
+        case 6:
+          return dayjs(xValue).format('YYYY-MM');
+        default:
+          return dayjs(xValue).format('YYYY-MM-DD');
+      }
     },
       getBackgroundColor(index) {
         const colors = ['rgba(75, 192, 192, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 99, 132, 0.2)'];
@@ -233,13 +265,13 @@
 }
 
 .stat-item .stat-icon {
-  font-size: 32px; /* Kích thước lớn hơn cho icon */
-  margin-right: 20px; /* Khoảng cách lớn hơn giữa icon và nội dung */
-  color: red; /* Màu đỏ cho icon */
+  font-size: 32px;
+  margin-right: 20px;
+  color: red; 
 }
 
 .stat-content {
-  flex: 1; /* Chia dư thừa cho nội dung của stat-item */
+  flex: 1; 
 }
 
 .stat-item h2 {
