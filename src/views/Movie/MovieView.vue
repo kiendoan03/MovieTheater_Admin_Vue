@@ -190,7 +190,7 @@ library.add(fas)
              axios.delete(`https://localhost:7071/api/Movies/${movieId}`).then(response => {
             console.log(response.data);
             alert('Movie deleted successfully');
-            this.getActors();
+            this.getMovies();
         }).catch(error => {
             console.error('Error deleting movie:', error);
             alert('Cannot delete this movie because it is being used in a schedule');

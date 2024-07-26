@@ -106,7 +106,7 @@ export default {
                   axios.delete(`https://localhost:7071/api/Genres/${genreId}`).then(response => {
                   console.log(response.data);
                   alert('Genre deleted successfully');
-                  this.getActors();
+                  this.getGenres();
               }).catch(error => {
                   console.error('Error deleting genre:', error);
               });

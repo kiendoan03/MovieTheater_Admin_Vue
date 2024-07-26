@@ -109,7 +109,7 @@ export default {
           axios.delete(`https://localhost:7071/api/Directors/${directorId}`).then(response => {
             console.log(response.data);
             alert('Director deleted successfully');
-            this.getActors();
+            this.getDirectors();
             }).catch(error => {
                 console.error('Error deleting director:', error);
             });
