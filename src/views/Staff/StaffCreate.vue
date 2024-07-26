@@ -121,7 +121,7 @@ export default {
             });
         },
         saveStaff() {
-            if(this.model.staff.name == '' || this.model.staff.userName == '' || this.model.staff.dob == '' || this.model.staff.email == '' || this.model.staff.phonenumber == '' || this.model.staff.address == '' || this.model.staff.password == '' || this.model.staff.role == ''){
+            if(this.model.staff.name == '' || this.model.staff.userName == '' || this.model.staff.dob == '' || this.model.staff.email == '' || this.model.staff.phonenumber == '' || this.model.staff.address == '' || this.model.staff.password == '' || this.model.staff.role == '' || this.model.staff.image == null){
                 alert('Please fill all fields');
                 return;
             }
@@ -162,7 +162,8 @@ export default {
                 this.$router.push('/staff');
             }).catch(error => {
                 console.error('Error adding staff:', error);
-                alert('Error adding staff:' + error.response.data);
+                    alert('Error adding staff: ' + error.response.data);
+                    return;
             });
         },
         onFileChange(event) {
